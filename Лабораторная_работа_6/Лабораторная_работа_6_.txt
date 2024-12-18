@@ -1,0 +1,54 @@
+% Базовые условия
+collect(wolf, fauna).
+position(wolf, naf_naf, left).
+position(nuf_nuf, naf_naf, opposite).
+
+% Правила для определения позиций
+position(WhoIs, Who, right) :-
+    position(WhoIs, naf_naf, left),
+    position(Who, naf_naf, opposite).
+
+position(nif_nif, WhoIs, Where) :-
+    position(wolf, WhoIs, left),
+    position(wolf, nuf_nuf, Where).
+
+% Правила для определения коллекций
+collect(Who, space) :-
+    position(nif_nif, Who, right).
+
+% Доступные марки
+available_mark(flora).
+available_mark(sport).
+available_mark(fauna).
+available_mark(space).
+
+% Правила для распределения марок
+collect(nuf_nuf, What) :-
+    available_mark(What),
+    What \= sport,
+    \+ collect(wolf, What),
+    \+ collect(naf_naf, What).
+
+collect(nif_nif, What) :-
+    available_mark(What),
+    \+ collect(nuf_nuf, What),
+    \+ collect(wolf, What),
+    \+ collect(naf_naf, What).
+
+% Вывод коллекционеров и их коллекций
+print_collectors :-
+    collect(Who, What),
+    format("~w собирает ~w~n", [Who, What]),
+    fail.
+print_collectors.
+
+% Вывод позиций на столе
+print_positions :-
+    position(Who1, Who2, Where),
+    format("~w сидит ~w от ~w~n", [Who1, Where, Who2]),
+    fail.
+print_positions.
+
+% Основной запрос
+?- print_collectors.
+?- print_positions.
